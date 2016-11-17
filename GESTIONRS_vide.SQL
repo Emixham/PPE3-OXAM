@@ -132,20 +132,11 @@ CREATE  INDEX I_FK_RESERVATION_ORGANISME
 CREATE TABLE IF NOT EXISTS CONNEXION
  (
    IDCO INTEGER NOT NULL AUTO_INCREMENT ,
-   IDORG INTEGER NOT NULL  ,
    UTILISATEUR CHAR(32) NULL  ,
    MDP CHAR(32) NULL  
    , PRIMARY KEY (IDCO) 
  ) 
  comment = "";
-
-# -----------------------------------------------------------------------------
-#       INDEX DE LA TABLE CONNEXION
-# -----------------------------------------------------------------------------
-
-
-CREATE  INDEX I_FK_CONNEXION_ORGANISME
-     ON CONNEXION (IDORG ASC);
 
 # -----------------------------------------------------------------------------
 #       TABLE : APPARTENIR
@@ -169,6 +160,29 @@ CREATE  INDEX I_FK_APPARTENIR_CATEGORIE
 
 CREATE  INDEX I_FK_APPARTENIR_PRIX
      ON APPARTENIR (IDPRIX ASC);
+
+# -----------------------------------------------------------------------------
+#       TABLE : SE_CONNECTER
+# -----------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS SE_CONNECTER
+ (
+   IDCO INTEGER NOT NULL  ,
+   IDORG INTEGER NOT NULL  
+   , PRIMARY KEY (IDCO,IDORG) 
+ ) 
+ comment = "";
+
+# -----------------------------------------------------------------------------
+#       INDEX DE LA TABLE SE_CONNECTER
+# -----------------------------------------------------------------------------
+
+
+CREATE  INDEX I_FK_SE_CONNECTER_CONNEXION
+     ON SE_CONNECTER (IDCO ASC);
+
+CREATE  INDEX I_FK_SE_CONNECTER_ORGANISME
+     ON SE_CONNECTER (IDORG ASC);
 
 # -----------------------------------------------------------------------------
 #       TABLE : AJOUTER
@@ -242,11 +256,6 @@ ALTER TABLE RESERVATION
       REFERENCES ORGANISME (IDORG) ;
 
 
-ALTER TABLE CONNEXION 
-  ADD FOREIGN KEY FK_CONNEXION_ORGANISME (IDORG)
-      REFERENCES ORGANISME (IDORG) ;
-
-
 ALTER TABLE APPARTENIR 
   ADD FOREIGN KEY FK_APPARTENIR_CATEGORIE (IDCATEGORIE)
       REFERENCES CATEGORIE (IDCATEGORIE) ;
@@ -255,6 +264,16 @@ ALTER TABLE APPARTENIR
 ALTER TABLE APPARTENIR 
   ADD FOREIGN KEY FK_APPARTENIR_PRIX (IDPRIX)
       REFERENCES PRIX (IDPRIX) ;
+
+
+ALTER TABLE SE_CONNECTER 
+  ADD FOREIGN KEY FK_SE_CONNECTER_CONNEXION (IDCO)
+      REFERENCES CONNEXION (IDCO) ;
+
+
+ALTER TABLE SE_CONNECTER 
+  ADD FOREIGN KEY FK_SE_CONNECTER_ORGANISME (IDORG)
+      REFERENCES ORGANISME (IDORG) ;
 
 
 ALTER TABLE AJOUTER 
