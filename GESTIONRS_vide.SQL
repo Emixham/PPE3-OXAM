@@ -1,27 +1,39 @@
-DROP DATABASE IF EXISTS gestionRS;
+DROP DATABASE IF EXISTS gestionrs;
 
-CREATE DATABASE IF NOT EXISTS gestionRS;
-USE gestionRS;
+CREATE DATABASE IF NOT EXISTS gestionrs;
+USE gestionrs;
+# -----------------------------------------------------------------------------
+#       TABLE : DEMANDEUR
+# -----------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS DEMANDEUR
+ (
+   IDD INTEGER(2) NOT NULL AUTO_INCREMENT ,
+   IDORG INTEGER(2) NOT NULL  ,
+   NOMU VARCHAR(128) NULL  ,
+   ADRESSEMAIL VARCHAR(128) NULL  ,
+   MDP CHAR(32) NULL  
+   , PRIMARY KEY (IDD) 
+ ) 
+ comment = "";
+
+# -----------------------------------------------------------------------------
+#       INDEX DE LA TABLE DEMANDEUR
+# -----------------------------------------------------------------------------
+
+
+CREATE  INDEX I_FK_DEMANDEUR_ORGANISME
+     ON DEMANDEUR (IDORG ASC);
+
 # -----------------------------------------------------------------------------
 #       TABLE : MATERIEL
 # -----------------------------------------------------------------------------
 
 CREATE TABLE IF NOT EXISTS MATERIEL
  (
-   IDMATERIEL INTEGER NOT NULL AUTO_INCREMENT ,
+   IDMATERIEL INTEGER(2) NOT NULL AUTO_INCREMENT ,
    NOM CHAR(32) NULL  
    , PRIMARY KEY (IDMATERIEL) 
- ) 
- comment = "";
-
-# -----------------------------------------------------------------------------
-#       TABLE : PRIX
-# -----------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS PRIX
- (
-   IDPRIX INTEGER NOT NULL AUTO_INCREMENT 
-   , PRIMARY KEY (IDPRIX) 
  ) 
  comment = "";
 
@@ -31,9 +43,21 @@ CREATE TABLE IF NOT EXISTS PRIX
 
 CREATE TABLE IF NOT EXISTS DUREE
  (
-   IDDUREE INTEGER NOT NULL AUTO_INCREMENT ,
+   IDDUREE INTEGER(2) NOT NULL AUTO_INCREMENT ,
    DUREE CHAR(32) NULL  
    , PRIMARY KEY (IDDUREE) 
+ ) 
+ comment = "";
+
+# -----------------------------------------------------------------------------
+#       TABLE : CATEGR
+# -----------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS CATEGR
+ (
+   NUMCAT INTEGER(2) NOT NULL AUTO_INCREMENT ,
+   NOMCATR VARCHAR(128) NULL  
+   , PRIMARY KEY (NUMCAT) 
  ) 
  comment = "";
 
@@ -43,18 +67,26 @@ CREATE TABLE IF NOT EXISTS DUREE
 
 CREATE TABLE IF NOT EXISTS ORGANISME
  (
-   IDORG INTEGER NOT NULL AUTO_INCREMENT ,
+   IDORG INTEGER(2) NOT NULL AUTO_INCREMENT ,
+   NUMCAT INTEGER(2) NOT NULL  ,
    NOMORG CHAR(32) NULL  ,
    NOMUTI CHAR(32) NULL  ,
    ADRESSE CHAR(255) NULL  ,
-   CP INTEGER NULL  ,
+   CP INTEGER(2) NULL  ,
    VILLE CHAR(32) NULL  ,
    MAIL CHAR(255) NULL  ,
-   TEL INTEGER NULL  ,
-   RESIDENT BOOL NULL  
+   TEL INTEGER(2) NULL  
    , PRIMARY KEY (IDORG) 
  ) 
  comment = "";
+
+# -----------------------------------------------------------------------------
+#       INDEX DE LA TABLE ORGANISME
+# -----------------------------------------------------------------------------
+
+
+CREATE  INDEX I_FK_ORGANISME_CATEGR
+     ON ORGANISME (NUMCAT ASC);
 
 # -----------------------------------------------------------------------------
 #       TABLE : CATEGORIE
@@ -62,9 +94,9 @@ CREATE TABLE IF NOT EXISTS ORGANISME
 
 CREATE TABLE IF NOT EXISTS CATEGORIE
  (
-   IDCATEGORIE INTEGER NOT NULL AUTO_INCREMENT ,
+   IDCATEGORIE INTEGER(2) NOT NULL AUTO_INCREMENT ,
    NOMCATEGORIE CHAR(32) NULL  ,
-   NBPLACES INTEGER NULL  
+   NBPLACES INTEGER(2) NULL  
    , PRIMARY KEY (IDCATEGORIE) 
  ) 
  comment = "";
@@ -75,8 +107,8 @@ CREATE TABLE IF NOT EXISTS CATEGORIE
 
 CREATE TABLE IF NOT EXISTS SALLE
  (
-   IDSALLE INTEGER NOT NULL AUTO_INCREMENT ,
-   IDCATEGORIE INTEGER NOT NULL  ,
+   IDSALLE INTEGER(2) NOT NULL AUTO_INCREMENT ,
+   IDCATEGORIE INTEGER(2) NOT NULL  ,
    NOMSALLE CHAR(32) NULL  ,
    DISPONIBLE BOOL NULL  
    , PRIMARY KEY (IDSALLE) 
@@ -97,14 +129,14 @@ CREATE  INDEX I_FK_SALLE_CATEGORIE
 
 CREATE TABLE IF NOT EXISTS RESERVATION
  (
-   IDRESERVATION INTEGER NOT NULL AUTO_INCREMENT ,
-   IDDUREE INTEGER NOT NULL  ,
-   IDSALLE INTEGER NOT NULL  ,
-   IDORG INTEGER NOT NULL  ,
+   IDRESERVATION INTEGER(2) NOT NULL AUTO_INCREMENT ,
+   IDDUREE INTEGER(2) NOT NULL  ,
+   IDSALLE INTEGER(2) NOT NULL  ,
+   IDORG INTEGER(2) NOT NULL  ,
    VALIDER BOOL NULL  ,
    OBJET CHAR(255) NULL  ,
-   NBPERS INTEGER NULL  ,
-   NBPERSHAND INTEGER NULL  ,
+   NBPERS INTEGER(2) NULL  ,
+   NBPERSHAND INTEGER(2) NULL  ,
    MESSAGE CHAR(255) NULL  ,
    DATERESERV DATE NULL  
    , PRIMARY KEY (IDRESERVATION) 
@@ -126,63 +158,55 @@ CREATE  INDEX I_FK_RESERVATION_ORGANISME
      ON RESERVATION (IDORG ASC);
 
 # -----------------------------------------------------------------------------
-#       TABLE : CONNEXION
+#       TABLE : TARIFER
 # -----------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS CONNEXION
+CREATE TABLE IF NOT EXISTS TARIFER
  (
-   IDCO INTEGER NOT NULL AUTO_INCREMENT ,
-   UTILISATEUR CHAR(32) NULL  ,
-   MDP CHAR(32) NULL  
-   , PRIMARY KEY (IDCO) 
+   NUMCAT INTEGER(2) NOT NULL  ,
+   IDCATEGORIE INTEGER(2) NOT NULL  ,
+   IDDUREE INTEGER(2) NOT NULL  ,
+   PRIX DECIMAL(10,2) NULL  
+   , PRIMARY KEY (NUMCAT,IDCATEGORIE,IDDUREE) 
  ) 
  comment = "";
 
 # -----------------------------------------------------------------------------
-#       TABLE : APPARTENIR
+#       INDEX DE LA TABLE TARIFER
 # -----------------------------------------------------------------------------
 
-CREATE TABLE IF NOT EXISTS APPARTENIR
+
+CREATE  INDEX I_FK_TARIFER_CATEGR
+     ON TARIFER (NUMCAT ASC);
+
+CREATE  INDEX I_FK_TARIFER_CATEGORIE
+     ON TARIFER (IDCATEGORIE ASC);
+
+CREATE  INDEX I_FK_TARIFER_DUREE
+     ON TARIFER (IDDUREE ASC);
+
+# -----------------------------------------------------------------------------
+#       TABLE : CONTENIR
+# -----------------------------------------------------------------------------
+
+CREATE TABLE IF NOT EXISTS CONTENIR
  (
-   IDCATEGORIE INTEGER NOT NULL  ,
-   IDPRIX INTEGER NOT NULL  
-   , PRIMARY KEY (IDCATEGORIE,IDPRIX) 
+   IDMATERIEL INTEGER(2) NOT NULL  ,
+   IDSALLE INTEGER(2) NOT NULL  
+   , PRIMARY KEY (IDMATERIEL,IDSALLE) 
  ) 
  comment = "";
 
 # -----------------------------------------------------------------------------
-#       INDEX DE LA TABLE APPARTENIR
+#       INDEX DE LA TABLE CONTENIR
 # -----------------------------------------------------------------------------
 
 
-CREATE  INDEX I_FK_APPARTENIR_CATEGORIE
-     ON APPARTENIR (IDCATEGORIE ASC);
+CREATE  INDEX I_FK_CONTENIR_MATERIEL
+     ON CONTENIR (IDMATERIEL ASC);
 
-CREATE  INDEX I_FK_APPARTENIR_PRIX
-     ON APPARTENIR (IDPRIX ASC);
-
-# -----------------------------------------------------------------------------
-#       TABLE : SE_CONNECTER
-# -----------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS SE_CONNECTER
- (
-   IDCO INTEGER NOT NULL  ,
-   IDORG INTEGER NOT NULL  
-   , PRIMARY KEY (IDCO,IDORG) 
- ) 
- comment = "";
-
-# -----------------------------------------------------------------------------
-#       INDEX DE LA TABLE SE_CONNECTER
-# -----------------------------------------------------------------------------
-
-
-CREATE  INDEX I_FK_SE_CONNECTER_CONNEXION
-     ON SE_CONNECTER (IDCO ASC);
-
-CREATE  INDEX I_FK_SE_CONNECTER_ORGANISME
-     ON SE_CONNECTER (IDORG ASC);
+CREATE  INDEX I_FK_CONTENIR_SALLE
+     ON CONTENIR (IDSALLE ASC);
 
 # -----------------------------------------------------------------------------
 #       TABLE : AJOUTER
@@ -190,8 +214,8 @@ CREATE  INDEX I_FK_SE_CONNECTER_ORGANISME
 
 CREATE TABLE IF NOT EXISTS AJOUTER
  (
-   IDRESERVATION INTEGER NOT NULL  ,
-   IDMATERIEL INTEGER NOT NULL  
+   IDRESERVATION INTEGER(2) NOT NULL  ,
+   IDMATERIEL INTEGER(2) NOT NULL  
    , PRIMARY KEY (IDRESERVATION,IDMATERIEL) 
  ) 
  comment = "";
@@ -207,33 +231,20 @@ CREATE  INDEX I_FK_AJOUTER_RESERVATION
 CREATE  INDEX I_FK_AJOUTER_MATERIEL
      ON AJOUTER (IDMATERIEL ASC);
 
-# -----------------------------------------------------------------------------
-#       TABLE : RATTACHER
-# -----------------------------------------------------------------------------
-
-CREATE TABLE IF NOT EXISTS RATTACHER
- (
-   IDMATERIEL INTEGER NOT NULL  ,
-   IDSALLE INTEGER NOT NULL  
-   , PRIMARY KEY (IDMATERIEL,IDSALLE) 
- ) 
- comment = "";
-
-# -----------------------------------------------------------------------------
-#       INDEX DE LA TABLE RATTACHER
-# -----------------------------------------------------------------------------
-
-
-CREATE  INDEX I_FK_RATTACHER_MATERIEL
-     ON RATTACHER (IDMATERIEL ASC);
-
-CREATE  INDEX I_FK_RATTACHER_SALLE
-     ON RATTACHER (IDSALLE ASC);
-
 
 # -----------------------------------------------------------------------------
 #       CREATION DES REFERENCES DE TABLE
 # -----------------------------------------------------------------------------
+
+
+ALTER TABLE DEMANDEUR 
+  ADD FOREIGN KEY FK_DEMANDEUR_ORGANISME (IDORG)
+      REFERENCES ORGANISME (IDORG) ;
+
+
+ALTER TABLE ORGANISME 
+  ADD FOREIGN KEY FK_ORGANISME_CATEGR (NUMCAT)
+      REFERENCES CATEGR (NUMCAT) ;
 
 
 ALTER TABLE SALLE 
@@ -256,24 +267,29 @@ ALTER TABLE RESERVATION
       REFERENCES ORGANISME (IDORG) ;
 
 
-ALTER TABLE APPARTENIR 
-  ADD FOREIGN KEY FK_APPARTENIR_CATEGORIE (IDCATEGORIE)
+ALTER TABLE TARIFER 
+  ADD FOREIGN KEY FK_TARIFER_CATEGR (NUMCAT)
+      REFERENCES CATEGR (NUMCAT) ;
+
+
+ALTER TABLE TARIFER 
+  ADD FOREIGN KEY FK_TARIFER_CATEGORIE (IDCATEGORIE)
       REFERENCES CATEGORIE (IDCATEGORIE) ;
 
 
-ALTER TABLE APPARTENIR 
-  ADD FOREIGN KEY FK_APPARTENIR_PRIX (IDPRIX)
-      REFERENCES PRIX (IDPRIX) ;
+ALTER TABLE TARIFER 
+  ADD FOREIGN KEY FK_TARIFER_DUREE (IDDUREE)
+      REFERENCES DUREE (IDDUREE) ;
 
 
-ALTER TABLE SE_CONNECTER 
-  ADD FOREIGN KEY FK_SE_CONNECTER_CONNEXION (IDCO)
-      REFERENCES CONNEXION (IDCO) ;
+ALTER TABLE CONTENIR 
+  ADD FOREIGN KEY FK_CONTENIR_MATERIEL (IDMATERIEL)
+      REFERENCES MATERIEL (IDMATERIEL) ;
 
 
-ALTER TABLE SE_CONNECTER 
-  ADD FOREIGN KEY FK_SE_CONNECTER_ORGANISME (IDORG)
-      REFERENCES ORGANISME (IDORG) ;
+ALTER TABLE CONTENIR 
+  ADD FOREIGN KEY FK_CONTENIR_SALLE (IDSALLE)
+      REFERENCES SALLE (IDSALLE) ;
 
 
 ALTER TABLE AJOUTER 
@@ -284,14 +300,4 @@ ALTER TABLE AJOUTER
 ALTER TABLE AJOUTER 
   ADD FOREIGN KEY FK_AJOUTER_MATERIEL (IDMATERIEL)
       REFERENCES MATERIEL (IDMATERIEL) ;
-
-
-ALTER TABLE RATTACHER 
-  ADD FOREIGN KEY FK_RATTACHER_MATERIEL (IDMATERIEL)
-      REFERENCES MATERIEL (IDMATERIEL) ;
-
-
-ALTER TABLE RATTACHER 
-  ADD FOREIGN KEY FK_RATTACHER_SALLE (IDSALLE)
-      REFERENCES SALLE (IDSALLE) ;
 
