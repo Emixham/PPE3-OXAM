@@ -34,7 +34,7 @@ switch($action)
 		    $_SESSION['id'] = $resultat['id'];
 		    $_SESSION['nom'] = $nom;
 		    echo 'Vous êtes connecté !';
-		    header('location: index.php?uc=voirProduits&action=voirCategories');
+		    header('location: index.php?uc=voirSalle&action=voirCategories');
 
 		}
 	break;

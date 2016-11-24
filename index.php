@@ -1,11 +1,9 @@
-<<<<<<< HEAD
-index.php
+
 <html>
     <body>
-TEST
+
     </body>
 </html>
-=======
 <?php
 session_start();
 require_once("util/fonctions.inc.php");
@@ -35,4 +33,4 @@ switch($uc)
 include("vues/v_pied.php") ;
 ?>     
 
->>>>>>> origin/master
+
