@@ -1,5 +1,4 @@
 ﻿<?php
-initPanier();
 $action = $_REQUEST['action'];
 switch($action)
 {
@@ -18,4 +17,5 @@ switch($action)
 		include("vues/v_voirsalle.php");
 		break;
 	}
+}
 ?>

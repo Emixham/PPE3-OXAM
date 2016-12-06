@@ -1,9 +1,11 @@
 
+
 <html>
     <body>
 
     </body>
 </html>
+
 <?php
 session_start();
 require_once("util/fonctions.inc.php");
@@ -27,6 +29,8 @@ switch($uc)
 		{ include("controleurs/c_voirSalle.php");break; }
 	case 'reserverSalle' :
 	  { include("controleurs/c_reserverSalle.php");break;  }
+	case 'contacter' :
+	  { include("controleurs/c_contacter.php");break;  }
 }
 include("vues/v_pied.php") ;
 ?>     
