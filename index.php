@@ -1,11 +1,4 @@
-<<<<<<< HEAD
-index.php
-<html>
-    <body>
-TEST
-    </body>
-</html>
-=======
+
 <?php
 session_start();
 require_once("util/fonctions.inc.php");
@@ -25,14 +18,14 @@ switch($uc)
 		{include("vues/v_accueil.php");break;}
 	case 'connexion' :
 		{ include("controleurs/c_connexion.php");break; }
-	case 'voirCategories' :
-		{include("controleurs/c_voirCategories.php");break;}
 	case 'voirSalle' :
 		{ include("controleurs/c_voirSalle.php");break; }
 	case 'reserverSalle' :
 	  { include("controleurs/c_reserverSalle.php");break;  }
+	case 'contacter' :
+	  { include("controleurs/c_contacter.php");break;  }
 }
 include("vues/v_pied.php") ;
 ?>     
 
->>>>>>> origin/master
+
