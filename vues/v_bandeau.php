@@ -1,5 +1,4 @@
 <div id="bandeau">
-<!-- Images En-tête -->
-<!--<img src="images/menuGauche.gif"	alt="Choisir" title="Choisir"/>-->
-<img src="images/JardiPlants.gif"	alt="JardiPlants" title="JardiPlants"/>
+<h2>Gestion des reservations des salles</h2>
+<img src="images/choletlogo.jpg">
 </div>

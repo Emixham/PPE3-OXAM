@@ -23,8 +23,6 @@ switch($uc)
 		{include("vues/v_accueil.php");break;}
 	case 'connexion' :
 		{ include("controleurs/c_connexion.php");break; }
-	case 'voirCategories' :
-		{include("controleurs/c_voirCategories.php");break;}
 	case 'voirSalle' :
 		{ include("controleurs/c_voirSalle.php");break; }
 	case 'reserverSalle' :
