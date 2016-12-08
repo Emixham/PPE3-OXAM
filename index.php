@@ -22,15 +22,20 @@ $pdo = PdogestionRS::getPdogestionRS();
 switch($uc)
 {
 	case 'accueil':
-		{include("vues/v_accueil.php");break;}
+		{include("vues/v_accueil.php");
+	break;}
 	case 'connexion' :
-		{ include("controleurs/c_connexion.php");break; }
+		{ include("controleurs/c_connexion.php");
+	break; }
 	case 'voirSalle' :
-		{ include("controleurs/c_voirSalle.php");break; }
+		{ include("controleurs/c_voirSalle.php");
+	break; }
 	case 'reserverSalle' :
-	  { include("controleurs/c_reserverSalle.php");break;  }
+	  { include("controleurs/c_reserverSalle.php");
+	break;  }
 	case 'contacter' :
-	  { include("controleurs/c_contacter.php");break;  }
+	  { include("controleurs/c_contacter.php");
+	break;  }
 }
 include("vues/v_pied.php") ;
 ?>     
